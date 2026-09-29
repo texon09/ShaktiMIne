@@ -1,0 +1,1725 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ShaktiMine — National Mine Safety & Emergency Rescue Portal</title>
+  <script src="https://www.gstatic.com/antigravity/web/dev/tailwindcss.min.js"></script>
+  <style>
+    /* Government of India Official Digital Portal Styling (Light Mode Only) */
+    :root {
+      --gov-navy: #0b2545;
+      --gov-blue: #134074;
+      --gov-saffron: #f58220;
+      --gov-green: #008000;
+      --surface-bg: #f1f5f9;
+      --card-bg: #ffffff;
+      --border-subtle: #cbd5e1;
+      --border-strong: #94a3b8;
+      --text-heading: #0f172a;
+      --text-body: #334155;
+      --text-muted: #64748b;
+    }
+    body {
+      background-color: var(--surface-bg);
+      color: var(--text-body);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    }
+    .custom-scroll::-webkit-scrollbar {
+      width: 7px;
+      height: 7px;
+    }
+    .custom-scroll::-webkit-scrollbar-thumb {
+      background-color: #94a3b8;
+      border-radius: 6px;
+    }
+    .tricolor-strip {
+      background: linear-gradient(90deg, #f58220 0%, #f58220 33.3%, #ffffff 33.3%, #ffffff 66.6%, #138808 66.6%, #138808 100%);
+      height: 4px;
+    }
+    .pulse-danger {
+      animation: pulse-red 1.6s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+    }
+    @keyframes pulse-red {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.6; transform: scale(1.08); }
+    }
+    .tab-active {
+      background-color: #0b2545 !important;
+      color: #ffffff !important;
+      border-color: #0b2545 !important;
+      box-shadow: 0 2px 4px rgba(11, 37, 69, 0.2);
+    }
+    @media print {
+      .no-print { display: none !important; }
+      body { background: white !important; font-size: 11pt !important; }
+      .print-full { width: 100% !important; margin: 0 !important; box-shadow: none !important; }
+    }
+  </style>
+</head>
+<body class="bg-slate-100 text-slate-800 antialiased min-h-screen flex flex-col select-none">
+
+  <!-- TOP NATIONAL TRICOLOR ACCENT -->
+  <div class="tricolor-strip w-full no-print"></div>
+
+  <!-- OFFICIAL GOVT OF INDIA / MINISTRY OF COAL & DGMS HEADER -->
+  <header class="bg-white border-b border-slate-200 sticky top-0 z-50 shadow-xs no-print">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3">
+      <div class="flex items-center justify-between gap-4">
+        
+        <!-- Left: Brand & Identification -->
+        <div class="flex items-center gap-3">
+          <div class="w-10 h-10 rounded-xl bg-slate-900 border border-slate-800 flex items-center justify-center text-white text-xl shadow-xs flex-shrink-0">
+            ⛏️
+          </div>
+          <div>
+            <div class="flex items-center gap-2">
+              <h1 class="text-xl font-extrabold text-slate-900 tracking-tight leading-none">ShaktiMine</h1>
+              <span class="text-[11px] font-bold px-2 py-0.5 rounded bg-amber-100 text-amber-900 border border-amber-200">SIH26039</span>
+              <span class="text-[11px] font-medium px-2 py-0.5 rounded bg-slate-100 text-slate-700 border border-slate-200 hidden sm:inline">DGMS CMR-2017</span>
+            </div>
+            <p class="text-xs text-slate-500 mt-1 font-medium hidden md:block">National Underground Mine Safety & Rescue Reconnaissance</p>
+          </div>
+        </div>
+
+        <!-- Right: Balanced Single-Row Status Toolbar -->
+        <div class="flex items-center gap-2 text-xs">
+          <div class="hidden xl:flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-slate-50 border border-slate-200 text-slate-700">
+            <span class="text-slate-400">Sector:</span>
+            <span class="font-bold text-slate-800">Jharia Seam 7B</span>
+          </div>
+
+          <div id="commStatusPill" class="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-emerald-50 border border-emerald-300 text-emerald-900 font-bold">
+            <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></span>
+            <span id="commStatusText">Fiber: 1 Gbps (Online)</span>
+          </div>
+
+          <button onclick="toggleAudio()" id="btnAudioToggle" class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold border border-slate-200 transition">
+            <span id="audioIcon">🔊</span>
+            <span id="audioLabel" class="hidden sm:inline">Audio: ON</span>
+          </button>
+
+          <button onclick="window.printReport()" class="flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg bg-slate-900 hover:bg-slate-800 text-white font-bold shadow-xs transition">
+            <span>📑</span>
+            <span>Form-IV Log</span>
+          </button>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- MAIN PORTAL NAVIGATION TABS (Symmetrical 5-Column Grid) -->
+    <nav class="border-t border-slate-200 bg-slate-50/80 px-4 sm:px-6 lg:px-8">
+      <div class="max-w-7xl mx-auto grid grid-cols-2 sm:grid-cols-5 gap-2 py-2 text-xs font-bold">
+        <button onclick="switchTab('command')" id="navTab_command" class="h-10 px-3 rounded-lg flex items-center justify-center gap-2 transition tab-active text-center border">
+          <span>🚨</span> <span>Live Command</span>
+        </button>
+        <button onclick="switchTab('safety')" id="navTab_safety" class="h-10 px-3 rounded-lg flex items-center justify-center gap-2 transition bg-white text-slate-700 border border-slate-200 hover:bg-slate-100 text-center">
+          <span>🧪</span> <span>Gas Safety (CMR)</span>
+        </button>
+        <button onclick="switchTab('map')" id="navTab_map" class="h-10 px-3 rounded-lg flex items-center justify-center gap-2 transition bg-white text-slate-700 border border-slate-200 hover:bg-slate-100 text-center">
+          <span>🗺️</span> <span>Gallery Map</span>
+        </button>
+        <button onclick="switchTab('workers')" id="navTab_workers" class="h-10 px-3 rounded-lg flex items-center justify-center gap-2 transition bg-white text-slate-700 border border-slate-200 hover:bg-slate-100 text-center relative">
+          <span>👷</span> <span>Trapped Workers</span>
+          <span id="tabBadgeMiner" class="w-2 h-2 rounded-full bg-rose-600 hidden absolute top-2 right-2"></span>
+        </button>
+        <button onclick="switchTab('audit')" id="navTab_audit" class="col-span-2 sm:col-span-1 h-10 px-3 rounded-lg flex items-center justify-center gap-2 transition bg-white text-slate-700 border border-slate-200 hover:bg-slate-100 text-center">
+          <span>📑</span> <span>Audit & Blackbox</span>
+        </button>
+      </div>
+    </nav>
+  </header>
+
+  <!-- BALANCED DEMONSTRATION PRESETS BAR (Symmetric 4-Column Grid) -->
+  <div class="bg-amber-50/70 border-b border-amber-200/80 px-4 sm:px-6 lg:px-8 py-2.5 no-print">
+    <div class="max-w-7xl mx-auto flex flex-col md:flex-row md:items-center justify-between gap-3">
+      
+      <!-- Label with clean indicator -->
+      <div class="flex items-center gap-2 flex-shrink-0">
+        <span class="w-2 h-2 rounded-full bg-amber-500 animate-ping"></span>
+        <span class="text-xs font-black uppercase tracking-wider text-amber-950">Demonstration Presets:</span>
+      </div>
+
+      <!-- Symmetrical 4-Button Grid -->
+      <div class="grid grid-cols-2 lg:grid-cols-4 gap-2 flex-1 max-w-4xl">
+        <button onclick="setScenario('normal')" id="btnScenarioNormal" class="h-8 px-3 rounded-lg text-xs font-bold transition flex items-center justify-center text-center bg-slate-900 text-white shadow-xs">
+          1. Normal Patrol
+        </button>
+        <button onclick="setScenario('gas_alert')" id="btnScenarioGas" class="h-8 px-3 rounded-lg text-xs font-bold transition flex items-center justify-center text-center bg-white text-slate-800 border border-slate-300 hover:bg-slate-100 shadow-xs">
+          2. Methane Spike
+        </button>
+        <button onclick="setScenario('miner_found')" id="btnScenarioMiner" class="h-8 px-3 rounded-lg text-xs font-bold transition flex items-center justify-center text-center bg-white text-slate-800 border border-slate-300 hover:bg-slate-100 shadow-xs">
+          3. Trapped Worker (AI)
+        </button>
+        <button onclick="setScenario('tether_cut')" id="btnScenarioTether" class="h-8 px-3 rounded-lg text-xs font-bold transition flex items-center justify-center text-center bg-white text-slate-800 border border-slate-300 hover:bg-slate-100 shadow-xs">
+          4. Tether Severed
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- MAIN TABBED CONTENT AREA -->
+  <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-5 flex-1 w-full space-y-5">
+
+    <!-- UNIVERSAL STATUTORY DECISION BANNER (High Visibility for Non-Technical Leaders & Inspectors) -->
+    <div id="safetyBanner" class="p-5 rounded-2xl border-2 transition-all duration-300 shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-4 bg-emerald-50 border-emerald-400 text-emerald-950">
+      <div class="flex items-start gap-4">
+        <div id="safetyBannerIcon" class="w-12 h-12 rounded-2xl bg-emerald-200 border-2 border-emerald-400 flex items-center justify-center text-2xl flex-shrink-0 mt-0.5">
+          ✅
+        </div>
+        <div>
+          <div class="flex items-center gap-2 flex-wrap">
+            <span class="text-[11px] uppercase font-black tracking-wider px-2.5 py-0.5 rounded-full bg-white text-emerald-800 border border-emerald-300">
+              Statutory Human Entry Decision
+            </span>
+            <span class="text-xs text-slate-600 font-mono">Governed by: Regulation 166, Coal Mines Regulations (2017)</span>
+          </div>
+          <h2 id="safetyBannerTitle" class="text-xl sm:text-2xl font-black mt-1 text-emerald-950 tracking-tight">
+            CONDITIONS PERMISSIBLE — HUMAN RESCUE ENTRY AUTHORIZED
+          </h2>
+          <p id="safetyBannerDesc" class="text-xs sm:text-sm text-emerald-900 mt-1 max-w-3xl leading-relaxed">
+            All atmospheric combustible gases, carbon monoxide levels, and oxygen concentrations are within statutory safety limits. Human rescue teams may advance under standard ventilation guidelines.
+          </p>
+        </div>
+      </div>
+      <div class="flex md:flex-col items-center md:items-end justify-between border-t md:border-t-0 pt-3 md:pt-0 border-emerald-200 gap-1.5 flex-shrink-0">
+        <span class="text-[11px] uppercase font-bold text-slate-500">Decision Authority:</span>
+        <span class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-extrabold bg-white text-slate-900 shadow-xs border-2 border-slate-200">
+          <span class="w-2.5 h-2.5 rounded-full bg-emerald-600"></span> Deterministic Rules (AI Cannot Override)
+        </span>
+      </div>
+    </div>
+
+    <!-- ========================================================================= -->
+    <!-- TAB 1: LIVE COMMAND & RECONNAISSANCE -->
+    <!-- ========================================================================= -->
+    <div id="tabContent_command" class="tab-panel space-y-5">
+      
+      <!-- Big Quick Metric Strip (Prominent Government Portal Style) -->
+      <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
+        
+        <!-- Metric 1: Methane -->
+        <div class="bg-white p-3.5 rounded-xl border border-slate-300 shadow-xs">
+          <div class="text-[11px] font-bold uppercase text-slate-500">Methane (CH₄)</div>
+          <div class="text-2xl font-black text-slate-900 mt-1 font-mono" id="stripValCH4">0.42%</div>
+          <div class="flex items-center justify-between text-[10px] mt-1 text-slate-500">
+            <span>Limit: 1.25%</span>
+            <span class="font-bold text-emerald-700" id="stripBadgeCH4">SAFE</span>
+          </div>
+        </div>
+
+        <!-- Metric 2: Carbon Monoxide -->
+        <div class="bg-white p-3.5 rounded-xl border border-slate-300 shadow-xs">
+          <div class="text-[11px] font-bold uppercase text-slate-500">Carbon Monoxide</div>
+          <div class="text-2xl font-black text-slate-900 mt-1 font-mono" id="stripValCO">12 ppm</div>
+          <div class="flex items-center justify-between text-[10px] mt-1 text-slate-500">
+            <span>Ceiling: 50 ppm</span>
+            <span class="font-bold text-emerald-700" id="stripBadgeCO">SAFE</span>
+          </div>
+        </div>
+
+        <!-- Metric 3: Oxygen -->
+        <div class="bg-white p-3.5 rounded-xl border border-slate-300 shadow-xs">
+          <div class="text-[11px] font-bold uppercase text-slate-500">Oxygen (O₂)</div>
+          <div class="text-2xl font-black text-slate-900 mt-1 font-mono" id="stripValO2">20.8%</div>
+          <div class="flex items-center justify-between text-[10px] mt-1 text-slate-500">
+            <span>Min: 19.0%</span>
+            <span class="font-bold text-emerald-700" id="stripBadgeO2">NORMAL</span>
+          </div>
+        </div>
+
+        <!-- Metric 4: Water Depth -->
+        <div class="bg-white p-3.5 rounded-xl border border-slate-300 shadow-xs">
+          <div class="text-[11px] font-bold uppercase text-slate-500">Floor Water Depth</div>
+          <div class="text-2xl font-black text-slate-900 mt-1 font-mono" id="stripValWater">3.2 cm</div>
+          <div class="flex items-center justify-between text-[10px] mt-1 text-slate-500">
+            <span>Flood Warn: 10 cm</span>
+            <span class="font-bold text-emerald-700">CLEAR</span>
+          </div>
+        </div>
+
+        <!-- Metric 5: Rover Battery -->
+        <div class="bg-white p-3.5 rounded-xl border border-slate-300 shadow-xs">
+          <div class="text-[11px] font-bold uppercase text-slate-500">Rover Battery</div>
+          <div class="text-2xl font-black text-slate-900 mt-1 font-mono">86%</div>
+          <div class="flex items-center justify-between text-[10px] mt-1 text-slate-500">
+            <span>Pack: 4S LFP</span>
+            <span class="font-bold text-sky-700">~2.4 hrs left</span>
+          </div>
+        </div>
+
+        <!-- Metric 6: Tether Distance -->
+        <div class="bg-white p-3.5 rounded-xl border border-slate-300 shadow-xs">
+          <div class="text-[11px] font-bold uppercase text-slate-500">Tether Unspooled</div>
+          <div class="text-2xl font-black text-slate-900 mt-1 font-mono" id="stripValTether">248 m</div>
+          <div class="flex items-center justify-between text-[10px] mt-1 text-slate-500">
+            <span>Spool: 300 m</span>
+            <span class="font-bold text-slate-700">Slip-ring Ok</span>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Main Reconnaissance Viewport & Control Grid -->
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-5">
+        
+        <!-- Video Stream Column (8 cols) -->
+        <div class="lg:col-span-8 space-y-4">
+          
+          <div class="bg-white border-2 border-slate-300 rounded-2xl shadow-sm overflow-hidden flex flex-col">
+            
+            <!-- Video Top Bar -->
+            <div class="px-4 py-3 border-b border-slate-200 bg-slate-50 flex flex-wrap items-center justify-between gap-2">
+              <div class="flex items-center gap-2.5">
+                <span class="w-3.5 h-3.5 rounded-full bg-red-600 animate-pulse"></span>
+                <span class="font-bold text-sm text-slate-900 uppercase tracking-wide">Live Underground Reconnaissance Feed</span>
+                <span class="text-xs px-2 py-0.5 rounded bg-slate-200 text-slate-700 font-mono font-bold">
+                  42 ms • 30 FPS • H.264
+                </span>
+              </div>
+
+              <!-- Camera Selector -->
+              <div class="inline-flex p-1 bg-slate-200 rounded-xl text-xs font-bold text-slate-700">
+                <button onclick="setCameraMode('split')" id="btnCamSplit" class="px-3 py-1.5 rounded-lg bg-white text-slate-900 shadow-xs">
+                  Split Dual-View
+                </button>
+                <button onclick="setCameraMode('thermal')" id="btnCamThermal" class="px-3 py-1.5 rounded-lg hover:text-slate-900">
+                  FLIR Thermal
+                </button>
+                <button onclick="setCameraMode('rgb')" id="btnCamRgb" class="px-3 py-1.5 rounded-lg hover:text-slate-900">
+                  Optical RGB
+                </button>
+              </div>
+            </div>
+
+            <!-- Viewport Screen -->
+            <div class="relative bg-slate-950 aspect-video w-full overflow-hidden flex items-center justify-center select-none" id="videoViewport">
+              
+              <canvas id="feedCanvas" width="720" height="405" class="w-full h-full object-cover"></canvas>
+
+              <!-- Video HUD Elements -->
+              <div class="absolute top-3 left-3 flex flex-col gap-1.5 pointer-events-none">
+                <div class="bg-black/70 backdrop-blur-xs text-white text-xs font-mono px-2.5 py-1 rounded-md border border-white/20">
+                  FEED: <span id="hudFeedTitle">DUAL SPLIT (OPTICAL + FLIR RADIOMETRIC)</span>
+                </div>
+                <div class="bg-black/70 backdrop-blur-xs text-white text-xs font-mono px-2.5 py-1 rounded-md border border-white/20">
+                  DEPTH: -142.4 m • SEAM: 7B • BEARING: 042° NE
+                </div>
+              </div>
+
+              <!-- Trapped Miner Detected AI Notification Overlay -->
+              <div id="aiDetectionOverlay" class="absolute bottom-4 left-4 right-4 bg-amber-500/95 text-slate-950 backdrop-blur-md p-3.5 rounded-xl border-2 border-amber-300 shadow-2xl flex flex-col sm:flex-row sm:items-center justify-between gap-3 hidden transition-all duration-300">
+                <div class="flex items-center gap-3">
+                  <div class="w-9 h-9 rounded-full bg-slate-950 text-amber-400 flex items-center justify-center text-xl flex-shrink-0">
+                    ⚠️
+                  </div>
+                  <div>
+                    <div class="font-black text-xs uppercase tracking-wider text-slate-950">
+                      [AI Advisory] Thermal Human Heat Signature Detected
+                    </div>
+                    <div class="text-xs text-slate-950 font-medium">
+                      Model: <b>YOLOv8n-thermal (ncnn)</b> • Confidence: <b>94.2%</b> • Heat Anomaly: <b>+8.4°C Above Rock</b>
+                    </div>
+                  </div>
+                </div>
+                <button onclick="openWorkerModal()" class="px-4 py-2 bg-slate-950 hover:bg-slate-800 text-white rounded-lg font-bold text-xs shadow flex items-center justify-center gap-2 flex-shrink-0 transition">
+                  <span>👷</span>
+                  <span>Inspect Trapped Worker Vitals</span>
+                </button>
+              </div>
+
+              <!-- Tether Cut Overlay -->
+              <div id="tetherCutOverlay" class="absolute inset-0 bg-slate-950/85 backdrop-blur-sm flex flex-col items-center justify-center p-6 text-center text-white hidden">
+                <div class="w-14 h-14 rounded-full bg-amber-500/20 border-2 border-amber-400 text-amber-400 flex items-center justify-center text-3xl mb-3">
+                  📡
+                </div>
+                <h3 class="text-lg font-black text-amber-300 tracking-wide uppercase">FIBER-OPTIC TETHER SEVERED — FAILSAFE TRIGGERED</h3>
+                <p class="text-xs text-slate-300 max-w-lg mt-2 leading-relaxed">
+                  High-bandwidth optical stream interrupted. The system has automatically degraded to <b>LoRa (865–867 MHz) Emergency Packet Telemetry</b>. All atmospheric and location sensors remain 100% active.
+                </p>
+                <div class="mt-4 px-4 py-1.5 bg-amber-400/20 border border-amber-400/40 rounded-lg text-xs font-mono text-amber-200">
+                  ROVER HOLDING STATION AT: Gallery 4, Junction B (Chainage: 248.6 m)
+                </div>
+              </div>
+
+            </div>
+
+            <!-- Video Controls Bar -->
+            <div class="px-4 py-3 bg-white border-t border-slate-200 flex flex-wrap items-center justify-between gap-3 text-xs">
+              <div class="flex items-center gap-2">
+                <button onclick="takeSnapshot()" class="px-3 py-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 font-bold text-slate-800 border border-slate-300 transition flex items-center gap-1.5">
+                  <span>📸</span> Snapshot Radiometric Frame
+                </button>
+                <button onclick="toggleLights()" id="btnLights" class="px-3 py-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 font-bold text-slate-800 border border-slate-300 transition flex items-center gap-1.5">
+                  <span>💡</span> Headlamp: <b class="text-emerald-700 ml-1">100% ON</b>
+                </button>
+              </div>
+              <div class="text-slate-500 text-xs font-mono">
+                Sensor: FLIR Lepton 3.5 (80x60 Radiometric) + Sony IMX708
+              </div>
+            </div>
+
+          </div>
+
+        </div>
+
+        <!-- Teleoperation & Controls Column (4 cols) -->
+        <div class="lg:col-span-4 space-y-4">
+          
+          <!-- Rover Drive Controller -->
+          <div class="bg-white border-2 border-slate-300 rounded-2xl p-4 shadow-sm">
+            <div class="flex items-center justify-between pb-3 border-b border-slate-200">
+              <div>
+                <h3 class="font-black text-sm text-slate-900 uppercase tracking-wide">Rover Drive Console</h3>
+                <p class="text-xs text-slate-500">Teleoperate through the hazardous gallery</p>
+              </div>
+              <div class="flex gap-1">
+                <button onclick="setSpeed('crawl')" id="btnSpeedCrawl" class="px-2.5 py-1 rounded-md text-xs font-extrabold bg-sky-100 text-sky-900 border border-sky-300">
+                  Crawl (0.5 km/h)
+                </button>
+                <button onclick="setSpeed('cruise')" id="btnSpeedCruise" class="px-2.5 py-1 rounded-md text-xs font-extrabold bg-slate-100 text-slate-600 border border-slate-300 hover:bg-slate-200">
+                  Survey (1.8 km/h)
+                </button>
+              </div>
+            </div>
+
+            <!-- Direction Pad -->
+            <div class="pt-4 flex flex-col items-center">
+              <div class="grid grid-cols-3 gap-2 w-44">
+                <div></div>
+                <button onmousedown="sendDrive('FORWARD')" onmouseup="sendDrive('STOP')" class="h-12 rounded-xl bg-slate-100 hover:bg-sky-100 active:bg-sky-200 border-2 border-slate-300 font-black text-lg text-slate-800 shadow-sm flex items-center justify-center transition">
+                  ▲
+                </button>
+                <div></div>
+                <button onmousedown="sendDrive('LEFT')" onmouseup="sendDrive('STOP')" class="h-12 rounded-xl bg-slate-100 hover:bg-sky-100 active:bg-sky-200 border-2 border-slate-300 font-black text-lg text-slate-800 shadow-sm flex items-center justify-center transition">
+                  ◀
+                </button>
+                <button onclick="sendDrive('STOP')" class="h-12 rounded-xl bg-rose-100 hover:bg-rose-200 active:bg-rose-300 border-2 border-rose-300 font-black text-xs text-rose-900 shadow-sm flex items-center justify-center transition">
+                  STOP
+                </button>
+                <button onmousedown="sendDrive('RIGHT')" onmouseup="sendDrive('STOP')" class="h-12 rounded-xl bg-slate-100 hover:bg-sky-100 active:bg-sky-200 border-2 border-slate-300 font-black text-lg text-slate-800 shadow-sm flex items-center justify-center transition">
+                  ▶
+                </button>
+                <div></div>
+                <button onmousedown="sendDrive('REVERSE')" onmouseup="sendDrive('STOP')" class="h-12 rounded-xl bg-slate-100 hover:bg-sky-100 active:bg-sky-200 border-2 border-slate-300 font-black text-lg text-slate-800 shadow-sm flex items-center justify-center transition">
+                  ▼
+                </button>
+                <div></div>
+              </div>
+              <p class="text-[11px] text-slate-500 mt-3 font-medium">Use Keyboard W / A / S / D keys or Click & Hold</p>
+            </div>
+
+            <!-- Gimbal Tilt -->
+            <div class="mt-4 pt-3 border-t border-slate-200">
+              <div class="flex justify-between text-xs font-bold mb-1.5">
+                <span class="text-slate-700">Camera Tilt:</span>
+                <span class="text-sky-800 font-mono" id="lblTilt">0° (Level Horizon)</span>
+              </div>
+              <input type="range" min="-30" max="60" value="0" id="tiltSlider" oninput="updateTilt(this.value)" class="w-full accent-sky-700 cursor-pointer">
+              <div class="flex justify-between text-[10px] text-slate-500 mt-1">
+                <span>-30° (Floor/Water)</span>
+                <span>0°</span>
+                <span>+60° (Roof Strata)</span>
+              </div>
+            </div>
+
+            <!-- Hard Emergency Stop -->
+            <div class="mt-4">
+              <button onclick="triggerEmergencyHalt()" class="w-full py-3 px-4 bg-red-600 hover:bg-red-700 active:bg-red-800 text-white font-black text-xs uppercase tracking-wider rounded-xl shadow-md flex items-center justify-center gap-2 transition">
+                <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
+                DIRECT HARDWARE EMERGENCY HALT
+              </button>
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+    <!-- ========================================================================= -->
+    <!-- TAB 2: ATMOSPHERIC & GAS SAFETY (CMR-2017) -->
+    <!-- ========================================================================= -->
+    <div id="tabContent_safety" class="tab-panel space-y-5 hidden">
+      
+      <div class="bg-white border-2 border-slate-300 rounded-2xl p-5 shadow-sm space-y-6">
+        
+        <div class="border-b border-slate-200 pb-3 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+          <div>
+            <h3 class="text-lg font-black text-slate-900 tracking-tight">Statutory Gas Compliance & Cross-Sensor Arbitration</h3>
+            <p class="text-xs text-slate-600">Coal Mines Regulations (CMR-2017) Regulation 166 Threshold Verification</p>
+          </div>
+          <span class="text-xs font-mono font-bold px-3 py-1 rounded-full bg-emerald-100 text-emerald-900 border border-emerald-300" id="safetyTabBadge">
+            ALL SENSORS NORMAL
+          </span>
+        </div>
+
+        <!-- Big Gas Gauges Grid -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
+          
+          <!-- Gas 1: METHANE CH4 -->
+          <div class="p-4 rounded-xl border-2 border-slate-200 bg-slate-50/70" id="boxCH4">
+            <div class="flex items-center justify-between mb-2">
+              <span class="font-black text-sm text-slate-900 flex items-center gap-2">
+                <span class="w-3 h-3 rounded-full bg-emerald-600" id="gaugeDotCH4"></span>
+                Methane (CH₄)
+              </span>
+              <span class="text-2xl font-black font-mono text-slate-900" id="gaugeValCH4">0.42%</span>
+            </div>
+            <div class="w-full bg-slate-200 rounded-full h-3 overflow-hidden">
+              <div id="gaugeBarCH4" class="bg-emerald-600 h-3 rounded-full transition-all duration-500" style="width: 20%;"></div>
+            </div>
+            <div class="flex justify-between text-[11px] font-bold text-slate-500 mt-2">
+              <span>0.0% Clean</span>
+              <span class="text-amber-800">1.25% DGMS Limit</span>
+              <span class="text-rose-800">5.0% LEL Explosive</span>
+            </div>
+            <div class="mt-3 p-2 bg-white rounded-lg border border-slate-200 text-[11px] text-slate-600 space-y-1">
+              <div class="font-bold text-slate-800">Triple-Redundancy Cross Check:</div>
+              <div class="font-mono text-[10px] flex justify-between">
+                <span>MQ-4 (MOS): <b id="subValMQ">0.42%</b></span>
+                <span>Pellistor: <b id="subValPell">0.39%</b></span>
+                <span>NDIR Optical: <b id="subValNDIR">0.41%</b></span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Gas 2: CARBON MONOXIDE CO -->
+          <div class="p-4 rounded-xl border-2 border-slate-200 bg-slate-50/70" id="boxCO">
+            <div class="flex items-center justify-between mb-2">
+              <span class="font-black text-sm text-slate-900 flex items-center gap-2">
+                <span class="w-3 h-3 rounded-full bg-emerald-600" id="gaugeDotCO"></span>
+                Carbon Monoxide (CO)
+              </span>
+              <span class="text-2xl font-black font-mono text-slate-900" id="gaugeValCO">12 ppm</span>
+            </div>
+            <div class="w-full bg-slate-200 rounded-full h-3 overflow-hidden">
+              <div id="gaugeBarCO" class="bg-emerald-600 h-3 rounded-full transition-all duration-500" style="width: 24%;"></div>
+            </div>
+            <div class="flex justify-between text-[11px] font-bold text-slate-500 mt-2">
+              <span>0 ppm Safe</span>
+              <span class="text-amber-800">50 ppm DGMS Ceiling</span>
+              <span class="text-rose-800">100+ ppm Lethal</span>
+            </div>
+            <div class="mt-3 p-2 bg-white rounded-lg border border-slate-200 text-[11px] text-slate-600">
+              <b>Health Impact:</b> 12 ppm is safe for prolonged exposure. Evacuation strictly ordered at 50 ppm.
+            </div>
+          </div>
+
+          <!-- Gas 3: OXYGEN O2 -->
+          <div class="p-4 rounded-xl border-2 border-slate-200 bg-slate-50/70" id="boxO2">
+            <div class="flex items-center justify-between mb-2">
+              <span class="font-black text-sm text-slate-900 flex items-center gap-2">
+                <span class="w-3 h-3 rounded-full bg-emerald-600" id="gaugeDotO2"></span>
+                Oxygen (O₂) Content
+              </span>
+              <span class="text-2xl font-black font-mono text-slate-900" id="gaugeValO2">20.8%</span>
+            </div>
+            <div class="w-full bg-slate-200 rounded-full h-3 overflow-hidden">
+              <div id="gaugeBarO2" class="bg-emerald-600 h-3 rounded-full transition-all duration-500" style="width: 92%;"></div>
+            </div>
+            <div class="flex justify-between text-[11px] font-bold text-slate-500 mt-2">
+              <span class="text-rose-800">&lt; 19.0% Asphyxiation</span>
+              <span class="text-emerald-800">20.8% Normal Air</span>
+            </div>
+            <div class="mt-3 p-2 bg-white rounded-lg border border-slate-200 text-[11px] text-slate-600">
+              <b>Arbitration Status:</b> Normal oxygen allows catalytic pellistor combustion. NDIR standby.
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Statutory Compliance Check Matrix -->
+        <div class="border-t border-slate-200 pt-4">
+          <h4 class="font-black text-xs uppercase tracking-wider text-slate-800 mb-3">Statutory Regulatory Check Matrix (Directorate General of Mines Safety)</h4>
+          <div class="overflow-x-auto">
+            <table class="w-full text-left text-xs border-collapse">
+              <thead>
+                <tr class="bg-slate-100 text-slate-800 font-bold border-b border-slate-300">
+                  <th class="p-3">Regulation Reference</th>
+                  <th class="p-3">Parameter & Technology</th>
+                  <th class="p-3">Statutory Threshold</th>
+                  <th class="p-3">Current Observed Reading</th>
+                  <th class="p-3">Compliance Verdict</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-slate-200">
+                <tr>
+                  <td class="p-3 font-mono font-bold">CMR-2017 Reg 166(1)</td>
+                  <td class="p-3">Inflammable Gas (Methane CH₄)</td>
+                  <td class="p-3 font-semibold text-slate-700">Max 1.25% by volume</td>
+                  <td class="p-3 font-mono font-bold" id="tdCH4">0.42%</td>
+                  <td class="p-3 font-bold text-emerald-700" id="verdictCH4">COMPLIANT (PERMISSIBLE)</td>
+                </tr>
+                <tr>
+                  <td class="p-3 font-mono font-bold">CMR-2017 Reg 166(4)</td>
+                  <td class="p-3">Noxious Gas (Carbon Monoxide CO)</td>
+                  <td class="p-3 font-semibold text-slate-700">Max 50.0 ppm</td>
+                  <td class="p-3 font-mono font-bold" id="tdCO">12 ppm</td>
+                  <td class="p-3 font-bold text-emerald-700" id="verdictCO">COMPLIANT (SAFE)</td>
+                </tr>
+                <tr>
+                  <td class="p-3 font-mono font-bold">CMR-2017 Reg 153</td>
+                  <td class="p-3">Ventilation Air Quality (O₂)</td>
+                  <td class="p-3 font-semibold text-slate-700">Min 19.0% by volume</td>
+                  <td class="p-3 font-mono font-bold" id="tdO2">20.8%</td>
+                  <td class="p-3 font-bold text-emerald-700" id="verdictO2">COMPLIANT (BREATHABLE)</td>
+                </tr>
+                <tr>
+                  <td class="p-3 font-mono font-bold">DGMS Tech Circular #3</td>
+                  <td class="p-3">Gallery Flooding / Ingress</td>
+                  <td class="p-3 font-semibold text-slate-700">Max 10.0 cm standing water</td>
+                  <td class="p-3 font-mono font-bold" id="tdWater">3.2 cm</td>
+                  <td class="p-3 font-bold text-emerald-700" id="verdictWater">COMPLIANT (TRAVERSABLE)</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+
+    <!-- ========================================================================= -->
+    <!-- TAB 3: 2D GALLERY MAP & RESCUE ROUTES -->
+    <!-- ========================================================================= -->
+    <div id="tabContent_map" class="tab-panel space-y-5 hidden">
+      
+      <div class="bg-white border-2 border-slate-300 rounded-2xl p-5 shadow-sm space-y-4">
+        
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between pb-3 border-b border-slate-200 gap-2">
+          <div>
+            <h3 class="text-lg font-black text-slate-900 tracking-tight">Underground Gallery Schematic & Multi-Criteria Path Rating</h3>
+            <p class="text-xs text-slate-600">Bord-and-Pillar Grid with Real-time Fiber Cable Breadcrumbs & Hazard Avoidance</p>
+          </div>
+          <div class="flex items-center gap-2">
+            <button onclick="centerRoverOnMap()" class="px-3 py-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-800 font-bold text-xs border border-slate-300 transition">
+              Center on Rover
+            </button>
+            <button onclick="calculateSafePath()" class="px-3.5 py-1.5 rounded-lg bg-sky-700 hover:bg-sky-800 text-white font-bold text-xs shadow transition">
+              Recalculate Safest Path (Dijkstra)
+            </button>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-5">
+          
+          <!-- Map Canvas (8 cols) -->
+          <div class="lg:col-span-8 bg-slate-950 rounded-xl overflow-hidden border-2 border-slate-300 relative aspect-4/3">
+            <canvas id="largeMapCanvas" width="600" height="450" class="w-full h-full object-cover"></canvas>
+            
+            <div class="absolute bottom-3 left-3 bg-black/80 backdrop-blur-xs text-white text-[11px] font-mono px-3 py-1.5 rounded border border-white/20 flex gap-4">
+              <span>ROVER COORD: <b id="mapCoordX">X: 180m</b>, <b id="mapCoordY">Y: 150m</b></span>
+              <span>GRID: 20m PILLARS</span>
+            </div>
+          </div>
+
+          <!-- Route Info & Gallery Nodes (4 cols) -->
+          <div class="lg:col-span-4 space-y-3 text-xs">
+            
+            <div class="p-3.5 bg-slate-50 border border-slate-300 rounded-xl">
+              <h4 class="font-black text-slate-900 uppercase tracking-wide text-xs mb-2">Gallery Node Evaluation</h4>
+              <div class="space-y-2">
+                <div class="p-2 bg-white rounded border border-slate-200 flex justify-between items-center">
+                  <div><b>Pit Head (Entry Shaft)</b><span class="text-[10px] text-slate-500 block">Staging Base</span></div>
+                  <span class="px-2 py-0.5 rounded font-bold text-[10px] bg-emerald-100 text-emerald-800">SAFE</span>
+                </div>
+                <div class="p-2 bg-white rounded border border-slate-200 flex justify-between items-center">
+                  <div><b>Gallery 2, Cross-cut A</b><span class="text-[10px] text-slate-500 block">Clear corridor</span></div>
+                  <span class="px-2 py-0.5 rounded font-bold text-[10px] bg-emerald-100 text-emerald-800">SAFE</span>
+                </div>
+                <div class="p-2 bg-white rounded border border-slate-200 flex justify-between items-center" id="nodeGallery4">
+                  <div><b>Gallery 4, Junction B</b><span class="text-[10px] text-slate-500 block" id="nodeGallery4Desc">Rover active position</span></div>
+                  <span class="px-2 py-0.5 rounded font-bold text-[10px] bg-sky-100 text-sky-800" id="nodeGallery4Badge">ACTIVE</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="p-3.5 bg-sky-50 border border-sky-200 rounded-xl text-sky-950">
+              <h4 class="font-black uppercase tracking-wide text-xs mb-1">Multi-Criteria Routing Rule:</h4>
+              <p class="text-[11px] leading-relaxed">
+                Path Cost = <b>Distance</b> × 0.3 + <b>Hazard Gas Risk</b> × 0.5 + <b>Comms Link Quality</b> × 0.2.<br>
+                Human rescuers are never routed through corridors with &gt;1.0% CH₄ regardless of distance.
+              </p>
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+    <!-- ========================================================================= -->
+    <!-- TAB 4: TRAPPED WORKERS & WEARABLES -->
+    <!-- ========================================================================= -->
+    <div id="tabContent_workers" class="tab-panel space-y-5 hidden">
+      
+      <div class="bg-white border-2 border-slate-300 rounded-2xl p-5 shadow-sm space-y-5">
+        
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between pb-3 border-b border-slate-200 gap-2">
+          <div>
+            <h3 class="text-lg font-black text-slate-900 tracking-tight">Trapped Worker Identification & Dosimeter Records</h3>
+            <p class="text-xs text-slate-600">Thermal Computer Vision AI Detections Combined with Personnel Database & Wearables</p>
+          </div>
+          <button onclick="openWorkerModal()" class="px-4 py-2 rounded-lg bg-rose-600 hover:bg-rose-700 text-white font-bold text-xs shadow flex items-center gap-1.5 transition">
+            <span>👷</span> View Active Target Dossier
+          </button>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+          
+          <!-- Miner Profile Card -->
+          <div class="p-4 bg-slate-50 rounded-xl border border-slate-300 space-y-3">
+            <div class="flex items-center gap-3">
+              <div class="w-12 h-12 rounded-xl bg-slate-900 text-white flex items-center justify-center text-2xl font-bold">
+                👷
+              </div>
+              <div>
+                <h4 class="text-base font-black text-slate-900">Ramesh Soren</h4>
+                <p class="text-xs text-slate-500 font-mono">Employee ID: #CIL-7419 • Bharat Coking Coal Ltd (BCCL)</p>
+              </div>
+            </div>
+
+            <div class="grid grid-cols-2 gap-2 text-xs pt-2">
+              <div class="p-2.5 bg-white rounded-lg border border-slate-200">
+                <span class="text-slate-400 text-[10px] block font-bold">ASSIGNED FACE</span>
+                <span class="font-bold text-slate-900">Seam 7B, Heading #3</span>
+              </div>
+              <div class="p-2.5 bg-white rounded-lg border border-slate-200">
+                <span class="text-slate-400 text-[10px] block font-bold">SHIFT TIMING</span>
+                <span class="font-bold text-slate-900">Morning Shift (06:00 - 14:00)</span>
+              </div>
+              <div class="p-2.5 bg-white rounded-lg border border-slate-200">
+                <span class="text-slate-400 text-[10px] block font-bold">EMERGENCY CONTACT</span>
+                <span class="font-bold text-slate-900">+91 98351 XXXXX</span>
+              </div>
+              <div class="p-2.5 bg-white rounded-lg border border-slate-200">
+                <span class="text-slate-400 text-[10px] block font-bold">MEDICAL STATUS</span>
+                <span class="font-bold text-emerald-700">Fit / Class-I Certificate</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Sensor Vitals & AI Perception Card -->
+          <div class="p-4 bg-slate-50 rounded-xl border border-slate-300 space-y-3">
+            <h4 class="font-black text-slate-900 uppercase tracking-wide text-xs">Perception & Dosimeter Telemetry</h4>
+            
+            <div class="grid grid-cols-3 gap-2 text-center text-xs">
+              <div class="p-3 bg-white rounded-xl border border-slate-200">
+                <span class="text-[10px] font-bold text-slate-400 uppercase block">Heart Rate</span>
+                <span class="text-xl font-black font-mono text-rose-700" id="workerHeartRate">96 BPM</span>
+                <span class="text-[9px] text-slate-500 block">Elevated / Conscious</span>
+              </div>
+              <div class="p-3 bg-white rounded-xl border border-slate-200">
+                <span class="text-[10px] font-bold text-slate-400 uppercase block">Body Heat</span>
+                <span class="text-xl font-black font-mono text-amber-700">36.8°C</span>
+                <span class="text-[9px] text-slate-500 block">+8.4°C over rock</span>
+              </div>
+              <div class="p-3 bg-white rounded-xl border border-slate-200">
+                <span class="text-[10px] font-bold text-slate-400 uppercase block">AI Confidence</span>
+                <span class="text-xl font-black font-mono text-emerald-700">94.2%</span>
+                <span class="text-[9px] text-slate-500 block">YOLOv8n (ncnn)</span>
+              </div>
+            </div>
+
+            <div class="p-3 bg-white rounded-xl border border-slate-200 text-xs">
+              <b>Two-Way Acoustic Intercom:</b>
+              <p class="text-[11px] text-slate-600 mt-0.5">
+                The rover's directional loudspeaker and high-sensitivity noise-canceling microphone can broadcast voice instructions to trapped miners.
+              </p>
+              <button onclick="broadcastAudioBeacon()" class="mt-2 px-3 py-1.5 rounded-lg bg-sky-700 hover:bg-sky-800 text-white font-bold text-xs transition flex items-center gap-1.5">
+                <span>📢</span> Transmit Voice Beacon ("Rescue Team is Inbound")
+              </button>
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+    <!-- ========================================================================= -->
+    <!-- TAB 5: STATUTORY AUDIT & BLACKBOX LOG (FORM-IV) -->
+    <!-- ========================================================================= -->
+    <div id="tabContent_audit" class="tab-panel space-y-5 hidden">
+      
+      <div class="bg-white border-2 border-slate-300 rounded-2xl p-5 shadow-sm space-y-4">
+        
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between pb-3 border-b border-slate-200 gap-2">
+          <div>
+            <h3 class="text-lg font-black text-slate-900 tracking-tight">Statutory Mission Event Log & Blackbox Audit Trail</h3>
+            <p class="text-xs text-slate-600">IS-9559 Tamper-Evident Chronological Storage for DGMS Post-Incident Investigation</p>
+          </div>
+          <button onclick="window.printReport()" class="px-4 py-2 rounded-lg bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs shadow flex items-center gap-2 transition">
+            <svg class="w-4 h-4 text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"/></svg>
+            Print / Export Official DGMS Form-IV Record
+          </button>
+        </div>
+
+        <div class="p-3 bg-slate-50 rounded-xl border border-slate-200 flex flex-wrap items-center justify-between gap-3 text-xs">
+          <div>
+            <span class="text-slate-500 font-medium">Session Integrity Hash:</span>
+            <span class="font-mono font-bold text-slate-800 ml-1">SHA256: 4f8b9e...2a71c0</span>
+          </div>
+          <div class="text-slate-500">
+            Append-only non-volatile local storage on RPi 5 NVMe + ESP32 Flash
+          </div>
+        </div>
+
+        <!-- Event Log Table -->
+        <div class="overflow-x-auto custom-scroll max-h-96 overflow-y-auto border border-slate-200 rounded-xl">
+          <table class="w-full text-left text-xs border-collapse">
+            <thead class="sticky top-0 bg-slate-100 text-slate-700 font-bold border-b border-slate-300">
+              <tr>
+                <th class="p-3">Timestamp (IST)</th>
+                <th class="p-3">Category</th>
+                <th class="p-3">Subsystem</th>
+                <th class="p-3">Event Description & Recorded Metric</th>
+              </tr>
+            </thead>
+            <tbody id="auditTableBody" class="divide-y divide-slate-100">
+              <!-- Dynamically populated rows -->
+            </tbody>
+          </table>
+        </div>
+
+      </div>
+
+    </div>
+
+  </main>
+
+  <!-- ========================================================================= -->
+  <!-- MODAL 1: TRAPPED WORKER IDENTIFICATION & DOSIMETER DOSSIER -->
+  <!-- ========================================================================= -->
+  <div id="workerModal" class="fixed inset-0 bg-slate-950/70 backdrop-blur-xs flex items-center justify-center p-4 z-50 hidden no-print">
+    <div class="bg-white rounded-2xl max-w-xl w-full p-6 shadow-2xl border-2 border-slate-300 max-h-[90vh] overflow-y-auto custom-scroll">
+      
+      <div class="border-b border-slate-200 pb-3 mb-4 flex items-start justify-between">
+        <div class="flex items-center gap-3">
+          <div class="w-11 h-11 rounded-xl bg-rose-100 border-2 border-rose-300 flex items-center justify-center text-rose-800 font-black text-xl">
+            👷
+          </div>
+          <div>
+            <h3 class="text-lg font-black text-slate-900 tracking-tight">Trapped Worker Identification Dossier</h3>
+            <p class="text-xs text-slate-500">Wearable Beacon Telemetry & Radiometric Vitals</p>
+          </div>
+        </div>
+        <button onclick="closeWorkerModal()" class="text-slate-400 hover:text-slate-700 text-2xl font-bold leading-none">&times;</button>
+      </div>
+
+      <div class="space-y-4 text-xs">
+        
+        <!-- Summary Box -->
+        <div class="p-3.5 bg-slate-50 rounded-xl border border-slate-200 grid grid-cols-2 gap-3 text-slate-700">
+          <div><span class="text-slate-400 block text-[10px] font-bold">WORKER NAME</span><b class="text-sm">Ramesh Soren</b></div>
+          <div><span class="text-slate-400 block text-[10px] font-bold">EMPLOYEE / TAG ID</span><b class="text-sm font-mono">#CIL-7419 (BCCL)</b></div>
+          <div><span class="text-slate-400 block text-[10px] font-bold">ASSIGNED SECTION</span><b>Gallery 4, Seam 7B</b></div>
+          <div><span class="text-slate-400 block text-[10px] font-bold">SHIFT TIMING</span><b>Morning (06:00 - 14:00)</b></div>
+        </div>
+
+        <!-- Telemetry Vitals Grid -->
+        <div class="grid grid-cols-3 gap-2.5">
+          <div class="p-3 bg-rose-50 border-2 border-rose-200 rounded-xl text-center">
+            <span class="text-[10px] text-rose-700 uppercase font-black block">Heart Rate</span>
+            <span class="text-xl font-black font-mono text-rose-950">96 BPM</span>
+            <span class="text-[9px] text-rose-800 font-medium block mt-0.5">Elevated / Conscious</span>
+          </div>
+          <div class="p-3 bg-amber-50 border-2 border-amber-200 rounded-xl text-center">
+            <span class="text-[10px] text-amber-800 uppercase font-black block">Thermal Temp</span>
+            <span class="text-xl font-black font-mono text-amber-950">36.8°C</span>
+            <span class="text-[9px] text-amber-800 font-medium block mt-0.5">+8.4°C Above Rock</span>
+          </div>
+          <div class="p-3 bg-emerald-50 border-2 border-emerald-200 rounded-xl text-center">
+            <span class="text-[10px] text-emerald-800 uppercase font-black block">Local O₂</span>
+            <span class="text-xl font-black font-mono text-emerald-950">20.4%</span>
+            <span class="text-[9px] text-emerald-800 font-medium block mt-0.5">Breathable Pocket</span>
+          </div>
+        </div>
+
+        <!-- Spatial Coordinates -->
+        <div class="p-3.5 bg-sky-50 border border-sky-200 rounded-xl text-sky-950">
+          <div class="font-bold mb-1 flex items-center gap-1.5">
+            <span>📍</span> Verified Spatial Location
+          </div>
+          <p class="text-xs leading-relaxed">
+            Coordinates: <b>Gallery 4, Junction B (Chainage: 248.6 meters from Pit Head)</b>.<br>
+            Obstruction: Rubble displacement of approx. 45 cm nearby; ceiling strata structurally stable.
+          </p>
+        </div>
+
+        <!-- Extrication Actions -->
+        <div class="space-y-2 pt-2 border-t border-slate-200">
+          <button onclick="broadcastAudioBeacon()" class="w-full py-2.5 px-3 bg-sky-700 hover:bg-sky-800 text-white font-bold rounded-xl transition flex items-center justify-center gap-2 shadow-xs">
+            📢 Broadcast Audio Beacon through Rover Speaker
+          </button>
+          <button onclick="dispatchRescueTeam()" class="w-full py-2.5 px-3 bg-slate-900 hover:bg-slate-800 text-white font-bold rounded-xl transition flex items-center justify-center gap-2 shadow-xs">
+            🚑 Lock Coordinates & Authorize Medical Extrication Team
+          </button>
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ========================================================================= -->
+  <!-- MODAL 2: PRINTABLE OFFICIAL DGMS FORM-IV AUDIT SHEET -->
+  <!-- ========================================================================= -->
+  <div id="reportModal" class="fixed inset-0 bg-slate-950/70 backdrop-blur-xs flex items-center justify-center p-4 z-50 hidden no-print">
+    <div class="bg-white rounded-2xl max-w-2xl w-full p-6 sm:p-8 shadow-2xl border-2 border-slate-300 max-h-[90vh] overflow-y-auto custom-scroll">
+      
+      <div class="border-b-2 border-slate-300 pb-4 mb-4 flex items-start justify-between">
+        <div class="flex items-center gap-3">
+          <div class="text-3xl">🏛️</div>
+          <div>
+            <span class="text-[11px] uppercase font-black tracking-widest text-slate-500">Government of India • Ministry of Labour & Employment</span>
+            <h2 class="text-xl font-black text-slate-950 tracking-tight">Directorate General of Mines Safety (DGMS)</h2>
+            <p class="text-xs text-slate-600 font-semibold">Form IV Preliminary Underground Mine Reconnaissance Audit Sheet • CMR-2017</p>
+          </div>
+        </div>
+        <button onclick="closeReport()" class="text-slate-400 hover:text-slate-700 text-2xl font-bold leading-none">&times;</button>
+      </div>
+
+      <div class="space-y-4 text-xs text-slate-800">
+        <div class="grid grid-cols-2 gap-3 p-3 bg-slate-50 rounded-xl border border-slate-200">
+          <div><b>Colliery:</b> Jharia Coalfield, Pit #4</div>
+          <div><b>Date & Time:</b> <span id="rptTimestamp"></span></div>
+          <div><b>Seam / Gallery:</b> Seam 7B (Bord & Pillar)</div>
+          <div><b>Incident ID:</b> INC-2026-JH-084</div>
+          <div><b>Reconnaissance Tool:</b> ShaktiMine Rover (Tethered)</div>
+          <div><b>Communication:</b> Fiber-Optic Primary (LoRa Standby)</div>
+        </div>
+
+        <h4 class="font-black text-slate-900 uppercase tracking-wide text-xs border-b pb-1">Recorded Atmospheric Minimums & Maximums</h4>
+        <table class="w-full text-left border-collapse border border-slate-300">
+          <thead>
+            <tr class="bg-slate-100 text-slate-800">
+              <th class="p-2 border border-slate-300">Parameter</th>
+              <th class="p-2 border border-slate-300">Observed Value</th>
+              <th class="p-2 border border-slate-300">CMR-2017 Threshold</th>
+              <th class="p-2 border border-slate-300">Compliance Status</th>
+            </tr>
+          </thead>
+          <tbody id="rptTableBody">
+            <!-- Dynamically populated rows -->
+          </tbody>
+        </table>
+
+        <h4 class="font-black text-slate-900 uppercase tracking-wide text-xs border-b pb-1">AI Detection & Human Target Findings</h4>
+        <div id="rptAiFindings" class="p-3 bg-amber-50 rounded-xl border border-amber-200 text-amber-950 font-medium">
+          No trapped human thermal signature flagged at current rover depth.
+        </div>
+
+        <div class="pt-4 border-t flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+          <div class="text-[10px] text-slate-500 font-mono">
+            Integrity Hash: SHA256-4f8b9e2a71c0 (Tamper-evident legal audit log)
+          </div>
+          <div class="flex gap-2">
+            <button onclick="window.print()" class="px-4 py-2 bg-slate-900 hover:bg-slate-800 text-white rounded-lg font-bold shadow transition">
+              Print / Save as Official PDF
+            </button>
+            <button onclick="closeReport()" class="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-800 rounded-lg font-bold border border-slate-300 transition">
+              Close
+            </button>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+
+  <!-- JAVASCRIPT LOGIC & SIMULATION ENGINE -->
+  <script>
+    // State management
+    const state = {
+      activeTab: 'command', // command, safety, map, workers, audit
+      scenario: 'normal',   // normal, gas_alert, miner_found, tether_cut
+      camMode: 'split',      // split, thermal, rgb
+      headlamp: true,
+      audioEnabled: true,
+      tilt: 0,
+      speed: 'crawl',
+      battery: 86,
+      tetherLength: 248,
+      roverX: 180,
+      roverY: 150,
+      roverHeading: 0.7,
+      ch4: 0.42,
+      co: 12,
+      o2: 20.8,
+      water: 3.2,
+      temp: 28.4,
+      rh: 78,
+      tetherOnline: true,
+      minerDetected: false,
+      logs: []
+    };
+
+    // Tab Switching Function
+    function switchTab(tabId) {
+      state.activeTab = tabId;
+      const tabs = ['command', 'safety', 'map', 'workers', 'audit'];
+      
+      tabs.forEach(t => {
+        const contentEl = document.getElementById('tabContent_' + t);
+        const navEl = document.getElementById('navTab_' + t);
+        const extraClass = (t === 'audit') ? ' col-span-2 sm:col-span-1' : '';
+        if (t === tabId) {
+          contentEl.classList.remove('hidden');
+          navEl.className = 'h-10 px-3 rounded-lg flex items-center justify-center gap-2 transition tab-active text-center border' + extraClass;
+        } else {
+          contentEl.classList.add('hidden');
+          navEl.className = 'h-10 px-3 rounded-lg flex items-center justify-center gap-2 transition bg-white text-slate-700 border border-slate-200 hover:bg-slate-100 text-center' + extraClass;
+        }
+      });
+      playTone(523, 'sine', 0.08, 1);
+    }
+
+    // Web Audio API Synthesizer for alerts
+    let audioCtx = null;
+    function playTone(freq, type, duration, count = 1, interval = 120) {
+      if (!state.audioEnabled) return;
+      try {
+        if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        if (audioCtx.state === 'suspended') audioCtx.resume();
+        
+        for (let i = 0; i < count; i++) {
+          setTimeout(() => {
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+            osc.type = type;
+            osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+            gain.gain.setValueAtTime(0.12, audioCtx.currentTime);
+            gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + duration);
+            osc.connect(gain);
+            gain.connect(audioCtx.destination);
+            osc.start();
+            osc.stop(audioCtx.currentTime + duration);
+          }, i * interval);
+        }
+      } catch(e) {
+        console.log('Audio gesture needed');
+      }
+    }
+
+    function toggleAudio() {
+      state.audioEnabled = !state.audioEnabled;
+      const icon = document.getElementById('audioIcon');
+      const label = document.getElementById('audioLabel');
+      if (state.audioEnabled) {
+        icon.innerText = '🔊';
+        label.innerText = 'Audio: ON';
+        playTone(587, 'sine', 0.15, 1);
+        addLog('SYS', 'Audio alarm synthesizer active.');
+      } else {
+        icon.innerText = '🔇';
+        label.innerText = 'Audio: MUTED';
+        addLog('SYS', 'Audio alarm muted.');
+      }
+    }
+
+    // Logging & Audit functions
+    function addLog(type, message) {
+      const timeStr = new Date().toLocaleTimeString('en-IN', { hour12: false });
+      state.logs.unshift({ time: timeStr, type, message });
+      if (state.logs.length > 50) state.logs.pop();
+      renderAuditLogs();
+    }
+
+    function renderAuditLogs() {
+      const tbody = document.getElementById('auditTableBody');
+      if (!tbody) return;
+      tbody.innerHTML = state.logs.map(log => {
+        let badgeColor = 'bg-slate-100 text-slate-800 border-slate-300';
+        let subsystem = 'Core System';
+        if (log.type === 'ALERT' || log.type === 'GAS') {
+          badgeColor = 'bg-rose-100 text-rose-900 border-rose-300 font-bold';
+          subsystem = 'Gas Rule Engine';
+        }
+        if (log.type === 'AI') {
+          badgeColor = 'bg-amber-100 text-amber-900 border-amber-300 font-bold';
+          subsystem = 'Vision AI (YOLOv8n)';
+        }
+        if (log.type === 'NAV') {
+          badgeColor = 'bg-sky-100 text-sky-900 border-sky-300';
+          subsystem = 'Drive Interlock';
+        }
+        return `
+          <tr class="hover:bg-slate-50">
+            <td class="p-3 font-mono text-[11px] text-slate-500 whitespace-nowrap">${log.time}</td>
+            <td class="p-3"><span class="px-2 py-0.5 rounded text-[10px] border ${badgeColor}">${log.type}</span></td>
+            <td class="p-3 text-slate-600 font-medium">${subsystem}</td>
+            <td class="p-3 text-slate-900 font-medium">${log.message}</td>
+          </tr>
+        `;
+      }).join('');
+    }
+
+    // Scenario Switcher Logic
+    function setScenario(scen) {
+      state.scenario = scen;
+      
+      const buttons = [
+        { id: 'btnScenarioNormal', name: 'normal' },
+        { id: 'btnScenarioGas', name: 'gas_alert' },
+        { id: 'btnScenarioMiner', name: 'miner_found' },
+        { id: 'btnScenarioTether', name: 'tether_cut' }
+      ];
+      buttons.forEach(b => {
+        const el = document.getElementById(b.id);
+        if (b.name === scen) {
+          el.className = 'h-8 px-3 rounded-lg text-xs font-bold transition flex items-center justify-center text-center bg-slate-900 text-white shadow-xs';
+        } else {
+          el.className = 'h-8 px-3 rounded-lg text-xs font-bold transition flex items-center justify-center text-center bg-white text-slate-800 border border-slate-300 hover:bg-slate-100 shadow-xs';
+        }
+      });
+
+      const aiOverlay = document.getElementById('aiDetectionOverlay');
+      const tetherOverlay = document.getElementById('tetherCutOverlay');
+      const commPill = document.getElementById('commStatusPill');
+      const commText = document.getElementById('commStatusText');
+      const tabBadgeMiner = document.getElementById('tabBadgeMiner');
+
+      if (scen === 'normal') {
+        playTone(523.25, 'triangle', 0.15, 2, 100);
+        state.ch4 = 0.42;
+        state.co = 12;
+        state.o2 = 20.8;
+        state.water = 3.2;
+        state.tetherOnline = true;
+        state.minerDetected = false;
+        aiOverlay.classList.add('hidden');
+        tetherOverlay.classList.add('hidden');
+        tabBadgeMiner.classList.add('hidden');
+        commPill.className = 'flex items-center gap-2 px-3 py-1.5 rounded-lg bg-emerald-50 border border-emerald-300 text-emerald-900 font-bold';
+        commText.innerText = 'Fiber: 1 Gbps (Online)';
+        addLog('SYS', 'Scenario initialized: Baseline reconnaissance. Clear air.');
+        updateSafetyBanner('SAFE', 'CONDITIONS PERMISSIBLE — HUMAN RESCUE ENTRY AUTHORIZED', 'All atmospheric combustible gases, carbon monoxide levels, and oxygen concentrations are within statutory safety limits. Human rescue teams may advance under standard ventilation guidelines.');
+      } 
+      else if (scen === 'gas_alert') {
+        playTone(880, 'sawtooth', 0.22, 3, 180);
+        state.ch4 = 1.85; // Exceeds 1.25% DGMS limit!
+        state.co = 68;   // High CO
+        state.o2 = 18.2; // Low O2
+        state.water = 6.4;
+        state.tetherOnline = true;
+        state.minerDetected = false;
+        aiOverlay.classList.add('hidden');
+        tetherOverlay.classList.add('hidden');
+        tabBadgeMiner.classList.add('hidden');
+        commPill.className = 'flex items-center gap-2 px-3 py-1.5 rounded-lg bg-emerald-50 border border-emerald-300 text-emerald-900 font-bold';
+        commText.innerText = 'Fiber: 1 Gbps (Online)';
+        addLog('GAS', 'CRITICAL VIOLATION: Methane CH4 at 1.85% (crosses CMR-2017 Reg 166 threshold of 1.25%).');
+        addLog('GAS', 'Carbon Monoxide toxic level 68 ppm. Statutory evacuation mandated.');
+        updateSafetyBanner('DANGER', 'ENTRY STRICTLY PROHIBITED — EVACUATION THRESHOLD EXCEEDED', 'Methane level (1.85%) has crossed statutory threshold under Regulation 166. Carbon monoxide is toxic (68 ppm). No human entry permitted without total ventilation isolation.');
+      } 
+      else if (scen === 'miner_found') {
+        playTone(587.33, 'sine', 0.3, 2, 220);
+        state.ch4 = 0.65;
+        state.co = 18;
+        state.o2 = 20.4;
+        state.water = 3.8;
+        state.tetherOnline = true;
+        state.minerDetected = true;
+        aiOverlay.classList.remove('hidden');
+        tetherOverlay.classList.add('hidden');
+        tabBadgeMiner.classList.remove('hidden');
+        commPill.className = 'flex items-center gap-2 px-3 py-1.5 rounded-lg bg-emerald-50 border border-emerald-300 text-emerald-900 font-bold';
+        commText.innerText = 'Fiber: 1 Gbps (Online)';
+        addLog('AI', 'Thermal Anomaly Flagged: Human heat blob identified at Gallery 4-B (+8.4°C contrast, 94.2% conf).');
+        updateSafetyBanner('RESCUE', 'TARGET ACQUIRED: CANDIDATE TRAPPED WORKER LOCATED', 'Human thermal signature confirmed at Gallery 4, Junction B. Local atmosphere is breathable. Prepare trauma kit and authorized extrication team.');
+      } 
+      else if (scen === 'tether_cut') {
+        playTone(330, 'square', 0.35, 2, 280);
+        state.ch4 = 0.55;
+        state.co = 15;
+        state.o2 = 20.6;
+        state.water = 3.2;
+        state.tetherOnline = false;
+        state.minerDetected = false;
+        aiOverlay.classList.add('hidden');
+        tetherOverlay.classList.remove('hidden');
+        tabBadgeMiner.classList.add('hidden');
+        commPill.className = 'flex items-center gap-2 px-3 py-1.5 rounded-lg bg-amber-50 border border-amber-400 text-amber-950 font-bold';
+        commText.innerText = 'LoRa 865 MHz (Backup)';
+        addLog('ALERT', 'CRITICAL HARDWARE: Fiber optic link interrupted at 248m. Instant failover to 865 MHz LoRa.');
+        addLog('SYS', 'Telemetry and gas sensor stream continuing over robust packet radio.');
+        updateSafetyBanner('WARNING', 'DEGRADED COMM LINK — LORA BACKUP ACTIVE (HOLDING POSITION)', 'Fiber tether severed by physical obstruction. High-bandwidth video paused. All life-safety gas telemetry remains online over 865 MHz LoRa.');
+      }
+
+      updateUIElements();
+    }
+
+    function updateSafetyBanner(mode, title, desc) {
+      const banner = document.getElementById('safetyBanner');
+      const icon = document.getElementById('safetyBannerIcon');
+      const titleEl = document.getElementById('safetyBannerTitle');
+      const descEl = document.getElementById('safetyBannerDesc');
+
+      titleEl.innerText = title;
+      descEl.innerText = desc;
+
+      if (mode === 'SAFE') {
+        banner.className = 'p-5 rounded-2xl border-2 transition-all duration-300 shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-4 bg-emerald-50 border-emerald-400 text-emerald-950';
+        icon.className = 'w-12 h-12 rounded-2xl bg-emerald-200 border-2 border-emerald-400 flex items-center justify-center text-2xl flex-shrink-0 mt-0.5';
+        icon.innerText = '✅';
+      } else if (mode === 'DANGER') {
+        banner.className = 'p-5 rounded-2xl border-2 transition-all duration-300 shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-4 bg-rose-50 border-rose-500 text-rose-950';
+        icon.className = 'w-12 h-12 rounded-2xl bg-rose-200 border-2 border-rose-400 flex items-center justify-center text-2xl flex-shrink-0 mt-0.5';
+        icon.innerText = '⛔';
+      } else if (mode === 'RESCUE') {
+        banner.className = 'p-5 rounded-2xl border-2 transition-all duration-300 shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-4 bg-sky-50 border-sky-400 text-sky-950';
+        icon.className = 'w-12 h-12 rounded-2xl bg-sky-200 border-2 border-sky-400 flex items-center justify-center text-2xl flex-shrink-0 mt-0.5';
+        icon.innerText = '🎯';
+      } else if (mode === 'WARNING') {
+        banner.className = 'p-5 rounded-2xl border-2 transition-all duration-300 shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-4 bg-amber-50 border-amber-400 text-amber-950';
+        icon.className = 'w-12 h-12 rounded-2xl bg-amber-200 border-2 border-amber-400 flex items-center justify-center text-2xl flex-shrink-0 mt-0.5';
+        icon.innerText = '⚠️';
+      }
+    }
+
+    function updateUIElements() {
+      // Strip Values
+      document.getElementById('stripValCH4').innerText = state.ch4.toFixed(2) + '%';
+      document.getElementById('stripValCO').innerText = state.co + ' ppm';
+      document.getElementById('stripValO2').innerText = state.o2.toFixed(1) + '%';
+      document.getElementById('stripValWater').innerText = state.water.toFixed(1) + ' cm';
+      document.getElementById('stripValTether').innerText = Math.round(state.tetherLength) + ' m';
+
+      // Gauges Tab Values
+      document.getElementById('gaugeValCH4').innerText = state.ch4.toFixed(2) + '%';
+      document.getElementById('gaugeValCO').innerText = state.co + ' ppm';
+      document.getElementById('gaugeValO2').innerText = state.o2.toFixed(1) + '%';
+      document.getElementById('tdCH4').innerText = state.ch4.toFixed(2) + '%';
+      document.getElementById('tdCO').innerText = state.co + ' ppm';
+      document.getElementById('tdO2').innerText = state.o2.toFixed(1) + '%';
+      document.getElementById('tdWater').innerText = state.water.toFixed(1) + ' cm';
+
+      // Bars & Dots
+      const barCH4 = document.getElementById('gaugeBarCH4');
+      const dotCH4 = document.getElementById('gaugeDotCH4');
+      const stripBadgeCH4 = document.getElementById('stripBadgeCH4');
+      const verdictCH4 = document.getElementById('verdictCH4');
+      const pctCH4 = Math.min(100, (state.ch4 / 2.5) * 100);
+      barCH4.style.width = pctCH4 + '%';
+
+      if (state.ch4 >= 1.25) {
+        barCH4.className = 'bg-rose-600 h-3 rounded-full transition-all duration-500';
+        dotCH4.className = 'w-3 h-3 rounded-full bg-rose-600 pulse-danger';
+        stripBadgeCH4.className = 'font-bold text-rose-700';
+        stripBadgeCH4.innerText = 'VIOLATION';
+        verdictCH4.className = 'p-3 font-black text-rose-700';
+        verdictCH4.innerText = 'NON-COMPLIANT (EVACUATE)';
+      } else {
+        barCH4.className = 'bg-emerald-600 h-3 rounded-full transition-all duration-500';
+        dotCH4.className = 'w-3 h-3 rounded-full bg-emerald-600';
+        stripBadgeCH4.className = 'font-bold text-emerald-700';
+        stripBadgeCH4.innerText = 'SAFE';
+        verdictCH4.className = 'p-3 font-bold text-emerald-700';
+        verdictCH4.innerText = 'COMPLIANT (PERMISSIBLE)';
+      }
+
+      // Carbon monoxide
+      const barCO = document.getElementById('gaugeBarCO');
+      const dotCO = document.getElementById('gaugeDotCO');
+      const stripBadgeCO = document.getElementById('stripBadgeCO');
+      const verdictCO = document.getElementById('verdictCO');
+      const pctCO = Math.min(100, (state.co / 80) * 100);
+      barCO.style.width = pctCO + '%';
+      if (state.co >= 50) {
+        barCO.className = 'bg-rose-600 h-3 rounded-full transition-all duration-500';
+        dotCO.className = 'w-3 h-3 rounded-full bg-rose-600 pulse-danger';
+        stripBadgeCO.className = 'font-bold text-rose-700';
+        stripBadgeCO.innerText = 'TOXIC';
+        verdictCO.className = 'p-3 font-black text-rose-700';
+        verdictCO.innerText = 'NON-COMPLIANT (TOXIC CEILING)';
+      } else {
+        barCO.className = 'bg-emerald-600 h-3 rounded-full transition-all duration-500';
+        dotCO.className = 'w-3 h-3 rounded-full bg-emerald-600';
+        stripBadgeCO.className = 'font-bold text-emerald-700';
+        stripBadgeCO.innerText = 'SAFE';
+        verdictCO.className = 'p-3 font-bold text-emerald-700';
+        verdictCO.innerText = 'COMPLIANT (SAFE)';
+      }
+
+      // Safety Tab Header Badge
+      const safetyTabBadge = document.getElementById('safetyTabBadge');
+      if (state.ch4 >= 1.25 || state.co >= 50 || state.o2 < 19.0) {
+        safetyTabBadge.className = 'text-xs font-mono font-bold px-3 py-1 rounded-full bg-rose-100 text-rose-900 border border-rose-300';
+        safetyTabBadge.innerText = 'HAZARD VIOLATION';
+      } else {
+        safetyTabBadge.className = 'text-xs font-mono font-bold px-3 py-1 rounded-full bg-emerald-100 text-emerald-900 border border-emerald-300';
+        safetyTabBadge.innerText = 'ALL SENSORS NORMAL';
+      }
+    }
+
+    // Modal controls
+    function openWorkerModal() {
+      document.getElementById('workerModal').classList.remove('hidden');
+      playTone(523, 'sine', 0.15, 1);
+    }
+
+    function closeWorkerModal() {
+      document.getElementById('workerModal').classList.add('hidden');
+    }
+
+    function broadcastAudioBeacon() {
+      playTone(440, 'sine', 0.3, 3, 250);
+      addLog('NAV', 'Two-Way Loudspeaker broadcast transmitted: "Rescue team inbound, remain stationary".');
+      alert('Rover loudspeaker transmission sent: "Rescue team is inbound, stay in your position."');
+    }
+
+    function dispatchRescueTeam() {
+      closeWorkerModal();
+      addLog('SYS', 'EXTRICATION TEAM MOBILIZED: Sector Gallery 4-B locked for medical unit entry.');
+      alert('Medical team dispatched to marked coordinates.');
+    }
+
+    // Camera Mode Controls
+    function setCameraMode(mode) {
+      state.camMode = mode;
+      const bSplit = document.getElementById('btnCamSplit');
+      const bTherm = document.getElementById('btnCamThermal');
+      const bRgb = document.getElementById('btnCamRgb');
+      const hudTitle = document.getElementById('hudFeedTitle');
+
+      bSplit.className = 'px-3 py-1.5 rounded-lg hover:text-slate-900';
+      bTherm.className = 'px-3 py-1.5 rounded-lg hover:text-slate-900';
+      bRgb.className = 'px-3 py-1.5 rounded-lg hover:text-slate-900';
+
+      if (mode === 'split') {
+        bSplit.className = 'px-3 py-1.5 rounded-lg bg-white text-slate-900 shadow-xs';
+        hudTitle.innerText = 'DUAL SPLIT (OPTICAL + FLIR RADIOMETRIC)';
+      } else if (mode === 'thermal') {
+        bTherm.className = 'px-3 py-1.5 rounded-lg bg-white text-slate-900 shadow-xs';
+        hudTitle.innerText = 'THERMAL INFRARED (FLIR LEPTON 3.5)';
+      } else {
+        bRgb.className = 'px-3 py-1.5 rounded-lg bg-white text-slate-900 shadow-xs';
+        hudTitle.innerText = 'OPTICAL RGB (SONY IMX708)';
+      }
+    }
+
+    function toggleLights() {
+      state.headlamp = !state.headlamp;
+      const btn = document.getElementById('btnLights');
+      if (state.headlamp) {
+        btn.innerHTML = '<span>💡</span> Headlamp: <b class="text-emerald-700 ml-1">100% ON</b>';
+        addLog('SYS', 'High-intensity dual LED headlamp enabled.');
+      } else {
+        btn.innerHTML = '<span>💡</span> Headlamp: <b class="text-slate-500 ml-1">OFF (IR Only)</b>';
+        addLog('SYS', 'Headlamp extinguished for passive thermal mode.');
+      }
+    }
+
+    function setSpeed(spd) {
+      state.speed = spd;
+      const b1 = document.getElementById('btnSpeedCrawl');
+      const b2 = document.getElementById('btnSpeedCruise');
+      if (spd === 'crawl') {
+        b1.className = 'px-2.5 py-1 rounded-md text-xs font-extrabold bg-sky-100 text-sky-900 border border-sky-300';
+        b2.className = 'px-2.5 py-1 rounded-md text-xs font-extrabold bg-slate-100 text-slate-600 border border-slate-300 hover:bg-slate-200';
+        addLog('NAV', 'Drive gear locked to Crawl (0.5 km/h) for hazard search.');
+      } else {
+        b2.className = 'px-2.5 py-1 rounded-md text-xs font-extrabold bg-sky-100 text-sky-900 border border-sky-300';
+        b1.className = 'px-2.5 py-1 rounded-md text-xs font-extrabold bg-slate-100 text-slate-600 border border-slate-300 hover:bg-slate-200';
+        addLog('NAV', 'Drive gear set to Survey (1.8 km/h).');
+      }
+    }
+
+    function updateTilt(val) {
+      state.tilt = val;
+      document.getElementById('lblTilt').innerText = `${val}°`;
+    }
+
+    function sendDrive(dir) {
+      if (dir === 'STOP') return;
+      addLog('NAV', `Teleop command: ${dir} (${state.speed.toUpperCase()})`);
+      const step = state.speed === 'crawl' ? 3 : 7;
+      if (dir === 'FORWARD') {
+        state.roverX += Math.cos(state.roverHeading) * step;
+        state.roverY += Math.sin(state.roverHeading) * step;
+        state.tetherLength += 0.3;
+      } else if (dir === 'REVERSE') {
+        state.roverX -= Math.cos(state.roverHeading) * step;
+        state.roverY -= Math.sin(state.roverHeading) * step;
+      } else if (dir === 'LEFT') {
+        state.roverHeading -= 0.15;
+      } else if (dir === 'RIGHT') {
+        state.roverHeading += 0.15;
+      }
+      document.getElementById('stripValTether').innerText = Math.round(state.tetherLength) + ' m';
+      document.getElementById('mapCoordX').innerText = `X: ${Math.round(state.roverX)}m`;
+      document.getElementById('mapCoordY').innerText = `Y: ${Math.round(state.roverY)}m`;
+    }
+
+    function triggerEmergencyHalt() {
+      playTone(330, 'square', 0.5, 3, 200);
+      addLog('ALERT', 'CRITICAL: EMERGENCY HARD STOP EXECUTED. Hardware relay de-energized.');
+      alert('EMERGENCY RELAY CUTOFF COMMAND SENT TO ESP32. ALL MOTOR DRIVES DE-ENERGIZED.');
+    }
+
+    function takeSnapshot() {
+      playTone(700, 'sine', 0.1, 1);
+      addLog('SYS', 'Radiometric thermal frame & telemetry packet archived to blackbox.');
+      alert('Snapshot and telemetry block successfully archived with SHA-256 seal.');
+    }
+
+    function centerRoverOnMap() {
+      addLog('NAV', 'Map viewport centered on active rover position.');
+    }
+
+    function calculateSafePath() {
+      playTone(600, 'triangle', 0.15, 2, 100);
+      addLog('NAV', 'Dijkstra multi-criteria algorithm updated. Safest escape corridor highlighted.');
+      alert('Safest connected path computed: Entry Shaft -> Gallery 2 -> Gallery 4-B.');
+    }
+
+    // CANVAS DRAWING: VIDEO RECONNAISSANCE FEED
+    const feedCanvas = document.getElementById('feedCanvas');
+    const fCtx = feedCanvas.getContext('2d');
+    let animFrame = 0;
+
+    function renderFeed() {
+      animFrame++;
+      const w = feedCanvas.width;
+      const h = feedCanvas.height;
+
+      fCtx.clearRect(0, 0, w, h);
+
+      if (state.camMode === 'split') {
+        drawRgbFeed(0, 0, w / 2, h);
+        drawThermalFeed(w / 2, 0, w / 2, h);
+        
+        fCtx.strokeStyle = '#38bdf8';
+        fCtx.lineWidth = 2;
+        fCtx.beginPath();
+        fCtx.moveTo(w / 2, 0);
+        fCtx.lineTo(w / 2, h);
+        fCtx.stroke();
+
+        fCtx.fillStyle = 'rgba(0,0,0,0.7)';
+        fCtx.fillRect(10, h - 26, 95, 18);
+        fCtx.fillRect(w / 2 + 10, h - 26, 115, 18);
+        fCtx.fillStyle = '#ffffff';
+        fCtx.font = 'bold 10px monospace';
+        fCtx.fillText('RGB OPTICAL', 16, h - 13);
+        fCtx.fillText('FLIR THERMAL 3.5', w / 2 + 16, h - 13);
+      } else if (state.camMode === 'rgb') {
+        drawRgbFeed(0, 0, w, h);
+      } else {
+        drawThermalFeed(0, 0, w, h);
+      }
+
+      requestAnimationFrame(renderFeed);
+    }
+
+    function drawRgbFeed(x, y, width, height) {
+      fCtx.save();
+      fCtx.beginPath();
+      fCtx.rect(x, y, width, height);
+      fCtx.clip();
+
+      const grad = fCtx.createLinearGradient(x + width / 2, y, x + width / 2, y + height);
+      if (state.headlamp) {
+        grad.addColorStop(0, '#1e293b');
+        grad.addColorStop(0.5, '#0f172a');
+        grad.addColorStop(1, '#020617');
+      } else {
+        grad.addColorStop(0, '#090d16');
+        grad.addColorStop(1, '#000000');
+      }
+      fCtx.fillStyle = grad;
+      fCtx.fillRect(x, y, width, height);
+
+      fCtx.strokeStyle = state.headlamp ? '#334155' : '#1e293b';
+      fCtx.lineWidth = 1.5;
+      fCtx.beginPath();
+      fCtx.moveTo(x, y); fCtx.lineTo(x + width * 0.45, y + height * 0.45);
+      fCtx.moveTo(x + width, y); fCtx.lineTo(x + width * 0.55, y + height * 0.45);
+      fCtx.moveTo(x, y + height); fCtx.lineTo(x + width * 0.45, y + height * 0.55);
+      fCtx.moveTo(x + width, y + height); fCtx.lineTo(x + width * 0.55, y + height * 0.55);
+      fCtx.stroke();
+
+      for (let i = 0; i < 4; i++) {
+        const offset = ((animFrame * 0.5 + i * 40) % 160);
+        fCtx.strokeStyle = 'rgba(71, 85, 105, 0.4)';
+        fCtx.strokeRect(x + width * 0.45 - offset * 0.9, y + height * 0.45 - offset * 0.5, offset * 1.8, offset);
+      }
+
+      if (state.headlamp) {
+        const lightGrad = fCtx.createRadialGradient(x + width * 0.5, y + height * 0.5, 10, x + width * 0.5, y + height * 0.5, width * 0.6);
+        lightGrad.addColorStop(0, 'rgba(254, 240, 138, 0.25)');
+        lightGrad.addColorStop(0.7, 'rgba(254, 240, 138, 0.05)');
+        lightGrad.addColorStop(1, 'rgba(0, 0, 0, 0)');
+        fCtx.fillStyle = lightGrad;
+        fCtx.fillRect(x, y, width, height);
+      }
+
+      if (state.scenario === 'miner_found') {
+        const mx = x + width * 0.52;
+        const my = y + height * 0.50;
+        fCtx.fillStyle = '#475569';
+        fCtx.fillRect(mx - 10, my - 5, 20, 25);
+        fCtx.beginPath();
+        fCtx.arc(mx, my - 12, 7, 0, Math.PI * 2);
+        fCtx.fillStyle = '#64748b';
+        fCtx.fill();
+        fCtx.fillStyle = '#facc15';
+        fCtx.fillRect(mx - 8, my + 2, 16, 3);
+      }
+
+      fCtx.restore();
+    }
+
+    function drawThermalFeed(x, y, width, height) {
+      fCtx.save();
+      fCtx.beginPath();
+      fCtx.rect(x, y, width, height);
+      fCtx.clip();
+
+      const grad = fCtx.createLinearGradient(x + width / 2, y, x + width / 2, y + height);
+      grad.addColorStop(0, '#2e0854');
+      grad.addColorStop(0.5, '#4c056c');
+      grad.addColorStop(1, '#1b0336');
+      fCtx.fillStyle = grad;
+      fCtx.fillRect(x, y, width, height);
+
+      fCtx.strokeStyle = 'rgba(147, 51, 234, 0.4)';
+      fCtx.lineWidth = 1.5;
+      fCtx.beginPath();
+      fCtx.moveTo(x, y); fCtx.lineTo(x + width * 0.45, y + height * 0.45);
+      fCtx.moveTo(x + width, y); fCtx.lineTo(x + width * 0.55, y + height * 0.45);
+      fCtx.moveTo(x, y + height); fCtx.lineTo(x + width * 0.45, y + height * 0.55);
+      fCtx.moveTo(x + width, y + height); fCtx.lineTo(x + width * 0.55, y + height * 0.55);
+      fCtx.stroke();
+
+      if (state.scenario === 'miner_found') {
+        const hx = x + width * 0.52;
+        const hy = y + height * 0.50;
+
+        const heatGrad = fCtx.createRadialGradient(hx, hy, 2, hx, hy, 28);
+        heatGrad.addColorStop(0, '#ffffff');
+        heatGrad.addColorStop(0.3, '#fde047');
+        heatGrad.addColorStop(0.6, '#ea580c');
+        heatGrad.addColorStop(0.9, '#9333ea');
+        heatGrad.addColorStop(1, 'transparent');
+        fCtx.fillStyle = heatGrad;
+        fCtx.beginPath();
+        fCtx.arc(hx, hy, 28, 0, Math.PI * 2);
+        fCtx.fill();
+
+        const bx = hx - 18;
+        const by = hy - 25;
+        const bw = 36;
+        const bh = 50;
+
+        fCtx.strokeStyle = '#22c55e';
+        fCtx.lineWidth = 2;
+        fCtx.strokeRect(bx, by, bw, bh);
+
+        fCtx.fillStyle = '#22c55e';
+        fCtx.fillRect(bx, by - 16, bw + 34, 16);
+        fCtx.fillStyle = '#052e16';
+        fCtx.font = 'bold 9px sans-serif';
+        fCtx.fillText('PERSON 94%', bx + 2, by - 4);
+      }
+
+      const barX = x + width - 15;
+      const tGrad = fCtx.createLinearGradient(barX, y + 20, barX, y + height - 20);
+      tGrad.addColorStop(0, '#ffffff');
+      tGrad.addColorStop(0.3, '#f59e0b');
+      tGrad.addColorStop(0.6, '#b91c1c');
+      tGrad.addColorStop(1, '#2e0854');
+      fCtx.fillStyle = tGrad;
+      fCtx.fillRect(barX, y + 20, 8, height - 40);
+      fCtx.fillStyle = '#ffffff';
+      fCtx.font = '8px monospace';
+      fCtx.fillText('40°', barX - 18, y + 28);
+      fCtx.fillText('20°', barX - 18, y + height - 22);
+
+      fCtx.restore();
+    }
+
+    // CANVAS DRAWING: LARGE 2D GALLERY MAP
+    const largeMapCanvas = document.getElementById('largeMapCanvas');
+    const lmCtx = largeMapCanvas.getContext('2d');
+
+    function renderLargeMap() {
+      const w = largeMapCanvas.width;
+      const h = largeMapCanvas.height;
+
+      lmCtx.clearRect(0, 0, w, h);
+
+      lmCtx.fillStyle = '#0b1329';
+      lmCtx.fillRect(0, 0, w, h);
+
+      // Open bord and pillar galleries
+      lmCtx.fillStyle = '#1e293b';
+      lmCtx.fillRect(30, 60, 540, 50);
+      lmCtx.fillRect(30, 180, 540, 50);
+      lmCtx.fillRect(30, 300, 540, 50);
+
+      lmCtx.fillRect(80, 30, 50, 390);
+      lmCtx.fillRect(240, 30, 50, 390);
+      lmCtx.fillRect(400, 30, 50, 390);
+
+      // Coal Pillars (Solid rock)
+      lmCtx.fillStyle = '#0f172a';
+      lmCtx.strokeStyle = '#334155';
+      lmCtx.lineWidth = 1.5;
+      
+      const pillars = [
+        {x: 130, y: 110, w: 110, h: 70},
+        {x: 290, y: 110, w: 110, h: 70},
+        {x: 130, y: 230, w: 110, h: 70},
+        {x: 290, y: 230, w: 110, h: 70}
+      ];
+      pillars.forEach(p => {
+        lmCtx.fillRect(p.x, p.y, p.w, p.h);
+        lmCtx.strokeRect(p.x, p.y, p.w, p.h);
+        lmCtx.fillStyle = '#475569';
+        lmCtx.font = '10px monospace';
+        lmCtx.fillText('SOLID COAL', p.x + 22, p.y + 38);
+        lmCtx.fillStyle = '#0f172a';
+      });
+
+      // Labels
+      lmCtx.fillStyle = '#94a3b8';
+      lmCtx.font = 'bold 11px sans-serif';
+      lmCtx.fillText('PIT-HEAD SHAFT #4', 35, 48);
+      lmCtx.fillText('GALLERY 2', 450, 90);
+      lmCtx.fillText('GALLERY 4 (SEAM 7B)', 430, 210);
+
+      // Gas Hazard Zone if scenario
+      if (state.scenario === 'gas_alert') {
+        lmCtx.fillStyle = 'rgba(239, 68, 68, 0.4)';
+        lmCtx.fillRect(230, 170, 230, 80);
+        lmCtx.fillStyle = '#f87171';
+        lmCtx.font = 'bold 11px sans-serif';
+        lmCtx.fillText('⚠️ CH4 ACCUMULATION (1.85%)', 245, 205);
+      }
+
+      // Fiber Cable Line
+      lmCtx.strokeStyle = state.tetherOnline ? '#38bdf8' : 'rgba(239, 68, 68, 0.8)';
+      lmCtx.lineWidth = 3;
+      lmCtx.beginPath();
+      lmCtx.moveTo(105, 85);
+      lmCtx.lineTo(105, 205);
+      lmCtx.lineTo(state.roverX * 1.5, state.roverY * 1.35);
+      lmCtx.stroke();
+
+      // Trapped Worker Icon if scenario
+      if (state.scenario === 'miner_found') {
+        lmCtx.fillStyle = '#ef4444';
+        lmCtx.beginPath();
+        lmCtx.arc(425, 205, 12, 0, Math.PI * 2);
+        lmCtx.fill();
+        lmCtx.fillStyle = '#ffffff';
+        lmCtx.font = 'bold 10px sans-serif';
+        lmCtx.fillText('SOS', 416, 209);
+      }
+
+      // Rover position
+      lmCtx.save();
+      lmCtx.translate(state.roverX * 1.5, state.roverY * 1.35);
+      lmCtx.rotate(state.roverHeading);
+
+      lmCtx.fillStyle = '#38bdf8';
+      lmCtx.fillRect(-14, -10, 28, 20);
+      lmCtx.fillStyle = '#0284c7';
+      lmCtx.fillRect(-15, -13, 30, 4);
+      lmCtx.fillRect(-15, 9, 30, 4);
+      lmCtx.fillStyle = '#ffffff';
+      lmCtx.beginPath();
+      lmCtx.moveTo(12, 0); lmCtx.lineTo(4, -6); lmCtx.lineTo(4, 6);
+      lmCtx.fill();
+
+      lmCtx.restore();
+
+      requestAnimationFrame(renderLargeMap);
+    }
+
+    // Official Report Modal Functions
+    window.printReport = function() {
+      document.getElementById('rptTimestamp').innerText = new Date().toLocaleString('en-IN');
+      const tbody = document.getElementById('rptTableBody');
+      tbody.innerHTML = `
+        <tr class="border-b">
+          <td class="p-2.5 font-bold">Methane (CH₄) Combustible Gas</td>
+          <td class="p-2.5 font-mono font-black">${state.ch4.toFixed(2)}%</td>
+          <td class="p-2.5">1.25% Max Permissible (CMR-2017 Reg 166)</td>
+          <td class="p-2.5 font-bold ${state.ch4 >= 1.25 ? 'text-rose-700' : 'text-emerald-700'}">${state.ch4 >= 1.25 ? 'NON-COMPLIANT (VIOLATION)' : 'COMPLIANT'}</td>
+        </tr>
+        <tr class="border-b">
+          <td class="p-2.5 font-bold">Carbon Monoxide (CO)</td>
+          <td class="p-2.5 font-mono font-black">${state.co} ppm</td>
+          <td class="p-2.5">50.0 ppm Statutory Ceiling</td>
+          <td class="p-2.5 font-bold ${state.co >= 50 ? 'text-rose-700' : 'text-emerald-700'}">${state.co >= 50 ? 'TOXIC (EVACUATE)' : 'COMPLIANT'}</td>
+        </tr>
+        <tr class="border-b">
+          <td class="p-2.5 font-bold">Oxygen (O₂) Life Support</td>
+          <td class="p-2.5 font-mono font-black">${state.o2.toFixed(1)}%</td>
+          <td class="p-2.5">19.0% Statutory Minimum</td>
+          <td class="p-2.5 font-bold ${state.o2 < 19.0 ? 'text-rose-700' : 'text-emerald-700'}">${state.o2 < 19.0 ? 'ASPHYXIATION RISK' : 'COMPLIANT'}</td>
+        </tr>
+        <tr class="border-b">
+          <td class="p-2.5 font-bold">Standing Water Level</td>
+          <td class="p-2.5 font-mono font-black">${state.water.toFixed(1)} cm</td>
+          <td class="p-2.5">10.0 cm Max for Human Rescue Entry</td>
+          <td class="p-2.5 font-bold ${state.water > 10 ? 'text-rose-700' : 'text-emerald-700'}">${state.water > 10 ? 'FLOOD RISK' : 'TRAVERSABLE'}</td>
+        </tr>
+      `;
+
+      const aiBox = document.getElementById('rptAiFindings');
+      if (state.scenario === 'miner_found') {
+        aiBox.className = 'p-3.5 bg-rose-50 rounded-xl border border-rose-300 text-rose-950';
+        aiBox.innerHTML = `
+          <b>CRITICAL FINDING:</b> Candidate trapped worker recognized at <b>Gallery 4, Junction B (Chainage 248.6m)</b>.<br>
+          Model: <code>YOLOv8n-thermal</code> | Inference Latency: <code>51ms (ncnn CPU)</code> | Radiometric Contrast: <code>+8.4°C</code>.<br>
+          <b>Action:</b> Medical trauma extrication unit advised to mobilize with oxygen kit.
+        `;
+      } else {
+        aiBox.className = 'p-3.5 bg-slate-50 rounded-xl border border-slate-200 text-slate-800';
+        aiBox.innerText = 'No trapped worker heat signatures identified in surveyed gallery section.';
+      }
+
+      document.getElementById('reportModal').classList.remove('hidden');
+    };
+
+    window.closeReport = function() {
+      document.getElementById('reportModal').classList.add('hidden');
+    };
+
+    // Keyboard navigation
+    window.addEventListener('keydown', (e) => {
+      if (['w', 'W', 'ArrowUp'].includes(e.key)) sendDrive('FORWARD');
+      if (['s', 'S', 'ArrowDown'].includes(e.key)) sendDrive('REVERSE');
+      if (['a', 'A', 'ArrowLeft'].includes(e.key)) sendDrive('LEFT');
+      if (['d', 'D', 'ArrowRight'].includes(e.key)) sendDrive('RIGHT');
+    });
+
+    // Initialization
+    window.onload = function() {
+      addLog('SYS', 'Government Portal Command Station initialized. Session ID: #INC-2026-JH-084.');
+      addLog('SYS', 'Fiber-optic primary tether link verified: 1000Base-BX BiDi Online.');
+      addLog('SYS', 'Triple-redundant gas arbitration active: MQ-4 + Pellistor + NDIR.');
+      addLog('SYS', 'ESP32 safety interlock heartbeat acknowledged at 10 Hz.');
+      renderAuditLogs();
+      renderFeed();
+      renderLargeMap();
+      setScenario('normal');
+    };
+  </script>
+</body>
+</html>
